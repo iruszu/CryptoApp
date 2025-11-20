@@ -13,11 +13,16 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: macos-14 # Uses macOS 14 (Sonoma) with Xcode 15
+    runs-on: macos-15 # Uses macOS 15 (Sequoia) with Xcode 16
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.1' # Use Xcode 16.1 or latest available
 
       - name: Show Xcode version
         run: xcodebuild -version
