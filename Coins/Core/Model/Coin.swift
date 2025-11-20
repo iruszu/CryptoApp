@@ -64,7 +64,9 @@ struct Coin: Identifiable, Codable {
         
         // Image URL should be valid (basic check)
         if !image.isEmpty {
-            guard URL(string: image) != nil else {
+            guard let url = URL(string: image),
+                  let scheme = url.scheme,
+                  (scheme == "http" || scheme == "https") else {
                 return false
             }
         }

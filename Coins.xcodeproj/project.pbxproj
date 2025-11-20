@@ -6,13 +6,57 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		ABF23E8D2ECEE91B00D5106E /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = ABF23E8C2ECEE91B00D5106E /* InlineSnapshotTesting */; };
+		ABF23E8F2ECEE91B00D5106E /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = ABF23E8E2ECEE91B00D5106E /* SnapshotTesting */; };
+		ABF23E912ECEE91B00D5106E /* SnapshotTestingCustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = ABF23E902ECEE91B00D5106E /* SnapshotTestingCustomDump */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		ABF23E762ECEE30000D5106E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB05B28C2EC5602D00B834B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB05B2932EC5602D00B834B5;
+			remoteInfo = Coins;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		AB05B2942EC5602D00B834B5 /* Coins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coins.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABF23E722ECEE30000D5106E /* CoinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		ABF23E7E2ECEE31200D5106E /* Exceptions for "Coins" folder in "Coins" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CoinTests/CoinModelTests.swift,
+				CoinTests/CoinsViewModelTests.swift,
+				CoinTests/CoinTests.swift,
+				CoinTests/PriceFormatterTests.swift,
+			);
+			target = AB05B2932EC5602D00B834B5 /* Coins */;
+		};
+		ABF23E7F2ECEE31200D5106E /* Exceptions for "Coins" folder in "CoinTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CoinTests/CoinModelTests.swift,
+				CoinTests/CoinsViewModelTests.swift,
+				CoinTests/CoinTests.swift,
+				CoinTests/PriceFormatterTests.swift,
+			);
+			target = ABF23E712ECEE30000D5106E /* CoinTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AB05B2962EC5602D00B834B5 /* Coins */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				ABF23E7E2ECEE31200D5106E /* Exceptions for "Coins" folder in "Coins" target */,
+				ABF23E7F2ECEE31200D5106E /* Exceptions for "Coins" folder in "CoinTests" target */,
+			);
 			path = Coins;
 			sourceTree = "<group>";
 		};
@@ -23,6 +67,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABF23E6F2ECEE30000D5106E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABF23E912ECEE91B00D5106E /* SnapshotTestingCustomDump in Frameworks */,
+				ABF23E8D2ECEE91B00D5106E /* InlineSnapshotTesting in Frameworks */,
+				ABF23E8F2ECEE91B00D5106E /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				AB05B2942EC5602D00B834B5 /* Coins.app */,
+				ABF23E722ECEE30000D5106E /* CoinTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +125,29 @@
 			productReference = AB05B2942EC5602D00B834B5 /* Coins.app */;
 			productType = "com.apple.product-type.application";
 		};
+		ABF23E712ECEE30000D5106E /* CoinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABF23E782ECEE30000D5106E /* Build configuration list for PBXNativeTarget "CoinTests" */;
+			buildPhases = (
+				ABF23E6E2ECEE30000D5106E /* Sources */,
+				ABF23E6F2ECEE30000D5106E /* Frameworks */,
+				ABF23E702ECEE30000D5106E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABF23E772ECEE30000D5106E /* PBXTargetDependency */,
+			);
+			name = CoinTests;
+			packageProductDependencies = (
+				ABF23E8C2ECEE91B00D5106E /* InlineSnapshotTesting */,
+				ABF23E8E2ECEE91B00D5106E /* SnapshotTesting */,
+				ABF23E902ECEE91B00D5106E /* SnapshotTestingCustomDump */,
+			);
+			productName = CoinTests;
+			productReference = ABF23E722ECEE30000D5106E /* CoinTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -83,6 +161,10 @@
 					AB05B2932EC5602D00B834B5 = {
 						CreatedOnToolsVersion = 26.0.1;
 					};
+					ABF23E712ECEE30000D5106E = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = AB05B2932EC5602D00B834B5;
+					};
 				};
 			};
 			buildConfigurationList = AB05B28F2EC5602D00B834B5 /* Build configuration list for PBXProject "Coins" */;
@@ -94,18 +176,29 @@
 			);
 			mainGroup = AB05B28B2EC5602D00B834B5;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ABF23E8B2ECEE91B00D5106E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AB05B2952EC5602D00B834B5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				AB05B2932EC5602D00B834B5 /* Coins */,
+				ABF23E712ECEE30000D5106E /* CoinTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		AB05B2922EC5602D00B834B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABF23E702ECEE30000D5106E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +215,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ABF23E6E2ECEE30000D5106E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ABF23E772ECEE30000D5106E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB05B2932EC5602D00B834B5 /* Coins */;
+			targetProxy = ABF23E762ECEE30000D5106E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AB05B29D2EC5602F00B834B5 /* Debug */ = {
@@ -310,6 +418,48 @@
 			};
 			name = Release;
 		};
+		ABF23E792ECEE30000D5106E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JH5HRRGFQZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kellieho.CoinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coins.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coins";
+			};
+			name = Debug;
+		};
+		ABF23E7A2ECEE30000D5106E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JH5HRRGFQZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kellieho.CoinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coins.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coins";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -331,7 +481,45 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		ABF23E782ECEE30000D5106E /* Build configuration list for PBXNativeTarget "CoinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABF23E792ECEE30000D5106E /* Debug */,
+				ABF23E7A2ECEE30000D5106E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ABF23E8B2ECEE91B00D5106E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ABF23E8C2ECEE91B00D5106E /* InlineSnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABF23E8B2ECEE91B00D5106E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = InlineSnapshotTesting;
+		};
+		ABF23E8E2ECEE91B00D5106E /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABF23E8B2ECEE91B00D5106E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		ABF23E902ECEE91B00D5106E /* SnapshotTestingCustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABF23E8B2ECEE91B00D5106E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTestingCustomDump;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB05B28C2EC5602D00B834B5 /* Project object */;
 }

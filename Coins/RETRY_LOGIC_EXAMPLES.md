@@ -1,8 +1,11 @@
+<!-- @format -->
+
 # Retry Logic Implementation Examples
 
 ## Option 1: Simple Retry in CoinService (Recommended)
 
-This is the simplest and most common approach - retry logic directly in the service layer.
+This is the simplest and most common approach - retry logic directly in the
+service layer.
 
 ```swift
 class CoinService: CoinServiceProtocol {
@@ -12,7 +15,7 @@ class CoinService: CoinServiceProtocol {
     private let defaultOrder = "market_cap_desc"
     private let maxRetries = 3
     private let retryDelay: TimeInterval = 1.0 // 1 second
-    
+
     func fetchCoins(page: Int = 1, perPage: Int = 20) async throws -> [Coin] {
         // Construct URL with query parameters
         var components = URLComponents(string: baseURL)
@@ -22,23 +25,23 @@ class CoinService: CoinServiceProtocol {
             URLQueryItem(name: "per_page", value: String(perPage)),
             URLQueryItem(name: "page", value: String(page))
         ]
-        
+
         guard let url = components?.url else {
             throw NetworkError.invalidURL
         }
-        
+
         // Retry logic wrapper
         var lastError: Error?
         for attempt in 1...maxRetries {
             do {
                 // Perform network request
                 let (data, response) = try await URLSession.shared.data(from: url)
-                
+
                 // Validate HTTP response
                 guard let httpResponse = response as? HTTPURLResponse else {
                     throw NetworkError.invalidResponse
                 }
-                
+
                 // Handle HTTP status codes
                 switch httpResponse.statusCode {
                 case 200...299:
@@ -46,7 +49,7 @@ class CoinService: CoinServiceProtocol {
                     guard !data.isEmpty else {
                         throw NetworkError.noDataAvailable
                     }
-                    
+
                     let decoder = JSONDecoder()
                     do {
                         let coins = try decoder.decode([Coin].self, from: data)
@@ -54,7 +57,7 @@ class CoinService: CoinServiceProtocol {
                     } catch {
                         throw NetworkError.decodingError
                     }
-                    
+
                 case 400...499:
                     // Client errors (4xx) - don't retry, throw immediately
                     throw NetworkError.requestFailed
@@ -66,14 +69,14 @@ class CoinService: CoinServiceProtocol {
                 }
             } catch let error as NetworkError {
                 // Check if error is retryable
-                let isRetryable = error == .serverError || 
+                let isRetryable = error == .serverError ||
                                  error == .invalidResponse ||
                                  error == .noDataAvailable
-                
+
                 if !isRetryable || attempt == maxRetries {
                     throw error
                 }
-                
+
                 lastError = error
                 // Wait before retrying
                 try? await Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
@@ -86,7 +89,7 @@ class CoinService: CoinServiceProtocol {
                 try? await Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
             }
         }
-        
+
         // If we get here, all retries failed
         throw lastError ?? NetworkError.unknown(NSError(domain: "CoinService", code: -1))
     }
@@ -97,7 +100,8 @@ class CoinService: CoinServiceProtocol {
 
 ## Option 2: Exponential Backoff Retry
 
-More sophisticated version with exponential backoff (wait time increases with each retry).
+More sophisticated version with exponential backoff (wait time increases with
+each retry).
 
 ```swift
 class CoinService: CoinServiceProtocol {
@@ -107,7 +111,7 @@ class CoinService: CoinServiceProtocol {
     private let defaultOrder = "market_cap_desc"
     private let maxRetries = 3
     private let baseDelay: TimeInterval = 1.0 // Base delay in seconds
-    
+
     private func shouldRetry(error: Error) -> Bool {
         if let networkError = error as? NetworkError {
             // Only retry server errors and transient issues
@@ -121,12 +125,12 @@ class CoinService: CoinServiceProtocol {
         // Retry URLSession errors (network failures)
         return true
     }
-    
+
     private func calculateDelay(attempt: Int) -> TimeInterval {
         // Exponential backoff: 1s, 2s, 4s
         return baseDelay * pow(2.0, Double(attempt - 1))
     }
-    
+
     func fetchCoins(page: Int = 1, perPage: Int = 20) async throws -> [Coin] {
         var components = URLComponents(string: baseURL)
         components?.queryItems = [
@@ -135,27 +139,27 @@ class CoinService: CoinServiceProtocol {
             URLQueryItem(name: "per_page", value: String(perPage)),
             URLQueryItem(name: "page", value: String(page))
         ]
-        
+
         guard let url = components?.url else {
             throw NetworkError.invalidURL
         }
-        
+
         var lastError: Error?
-        
+
         for attempt in 1...maxRetries {
             do {
                 let (data, response) = try await URLSession.shared.data(from: url)
-                
+
                 guard let httpResponse = response as? HTTPURLResponse else {
                     throw NetworkError.invalidResponse
                 }
-                
+
                 switch httpResponse.statusCode {
                 case 200...299:
                     guard !data.isEmpty else {
                         throw NetworkError.noDataAvailable
                     }
-                    
+
                     let decoder = JSONDecoder()
                     do {
                         let coins = try decoder.decode([Coin].self, from: data)
@@ -163,7 +167,7 @@ class CoinService: CoinServiceProtocol {
                     } catch {
                         throw NetworkError.decodingError
                     }
-                    
+
                 case 400...499:
                     throw NetworkError.requestFailed
                 case 500...599:
@@ -173,7 +177,7 @@ class CoinService: CoinServiceProtocol {
                 }
             } catch {
                 lastError = error
-                
+
                 // Check if we should retry
                 if !shouldRetry(error: error) || attempt == maxRetries {
                     if let networkError = error as? NetworkError {
@@ -181,13 +185,13 @@ class CoinService: CoinServiceProtocol {
                     }
                     throw NetworkError.unknown(error)
                 }
-                
+
                 // Wait with exponential backoff before retrying
                 let delay = calculateDelay(attempt: attempt)
                 try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
             }
         }
-        
+
         throw lastError as? NetworkError ?? NetworkError.unknown(NSError(domain: "CoinService", code: -1))
     }
 }
@@ -209,13 +213,13 @@ struct RetryHandler {
     let maxAttempts: Int
     let baseDelay: TimeInterval
     let useExponentialBackoff: Bool
-    
+
     init(maxAttempts: Int = 3, baseDelay: TimeInterval = 1.0, useExponentialBackoff: Bool = true) {
         self.maxAttempts = maxAttempts
         self.baseDelay = baseDelay
         self.useExponentialBackoff = useExponentialBackoff
     }
-    
+
     /// Retries an async throwing operation
     /// - Parameters:
     ///   - operation: The async throwing operation to retry
@@ -227,28 +231,28 @@ struct RetryHandler {
         shouldRetry: ((Error) -> Bool)? = nil
     ) async throws -> T {
         var lastError: Error?
-        
+
         for attempt in 1...maxAttempts {
             do {
                 return try await operation()
             } catch {
                 lastError = error
-                
+
                 // Check if we should retry
                 let willRetry = shouldRetry?(error) ?? true
                 if !willRetry || attempt == maxAttempts {
                     throw error
                 }
-                
+
                 // Calculate delay
-                let delay = useExponentialBackoff 
+                let delay = useExponentialBackoff
                     ? baseDelay * pow(2.0, Double(attempt - 1))
                     : baseDelay
-                
+
                 try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
             }
         }
-        
+
         throw lastError ?? NSError(domain: "RetryHandler", code: -1)
     }
 }
@@ -262,7 +266,7 @@ class CoinService: CoinServiceProtocol {
     private let defaultCurrency = "usd"
     private let defaultOrder = "market_cap_desc"
     private let retryHandler = RetryHandler(maxAttempts: 3, baseDelay: 1.0)
-    
+
     func fetchCoins(page: Int = 1, perPage: Int = 20) async throws -> [Coin] {
         var components = URLComponents(string: baseURL)
         components?.queryItems = [
@@ -271,24 +275,24 @@ class CoinService: CoinServiceProtocol {
             URLQueryItem(name: "per_page", value: String(perPage)),
             URLQueryItem(name: "page", value: String(page))
         ]
-        
+
         guard let url = components?.url else {
             throw NetworkError.invalidURL
         }
-        
+
         return try await retryHandler.retry {
             let (data, response) = try await URLSession.shared.data(from: url)
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 guard !data.isEmpty else {
                     throw NetworkError.noDataAvailable
                 }
-                
+
                 let decoder = JSONDecoder()
                 do {
                     let coins = try decoder.decode([Coin].self, from: data)
@@ -296,7 +300,7 @@ class CoinService: CoinServiceProtocol {
                 } catch {
                     throw NetworkError.decodingError
                 }
-                
+
             case 400...499:
                 throw NetworkError.requestFailed
             case 500...599:
@@ -331,31 +335,31 @@ If you want user-facing retry control, implement it in the ViewModel:
 class CoinsViewModel {
     // ... existing properties ...
     private let maxRetries = 3
-    
+
     func fetchCoins() async {
         guard !loading else { return }
-        
+
         loading = true
         errorMessage = nil
-        
+
         var lastError: Error?
-        
+
         for attempt in 1...maxRetries {
             do {
                 let fetchedCoins = try await service.fetchCoins(page: 1, perPage: coinsPerPage)
-                
+
                 await MainActor.run {
                     self.coins = fetchedCoins
                     self.loading = false
                 }
                 return // Success, exit
-                
+
             } catch let error as NetworkError {
                 lastError = error
-                
+
                 // Only retry server errors
                 let shouldRetry = error == .serverError && attempt < maxRetries
-                
+
                 if !shouldRetry {
                     await MainActor.run {
                         self.errorMessage = error.userMessage
@@ -363,10 +367,10 @@ class CoinsViewModel {
                     }
                     return
                 }
-                
+
                 // Wait before retry
                 try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
-                
+
             } catch {
                 await MainActor.run {
                     self.errorMessage = "An unexpected error occurred. Please try again."
@@ -375,7 +379,7 @@ class CoinsViewModel {
                 return
             }
         }
-        
+
         // All retries failed
         await MainActor.run {
             self.errorMessage = (lastError as? NetworkError)?.userMessage ?? "Failed after multiple attempts"
@@ -389,19 +393,20 @@ class CoinsViewModel {
 
 ## Recommendation
 
-**Use Option 1 or Option 2** (simple retry or exponential backoff in CoinService):
+**Use Option 1 or Option 2** (simple retry or exponential backoff in
+CoinService):
+
 - Keeps retry logic at the service layer
 - ViewModel doesn't need to know about retries
 - Automatic and transparent
 - Easy to test
 
 **Use Option 3** (utility) if:
+
 - You plan to have multiple services that need retry logic
 - You want maximum reusability and testability
 
 **Use Option 4** (ViewModel) if:
+
 - You need user-facing retry controls
 - You want to show retry progress in the UI
-
-
-
