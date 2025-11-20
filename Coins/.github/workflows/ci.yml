@@ -1,3 +1,5 @@
+# @format
+
 name: CI
 
 # Run on pushes to main branch, pull requests, and manual triggers
