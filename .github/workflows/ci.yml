@@ -13,7 +13,7 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: macos-15 # Uses macOS 15 (Sequoia) with Xcode 16
+    runs-on: macos-14 # Uses macOS 14 (Sonoma) - will try to use latest Xcode
 
     steps:
       - name: Checkout code
