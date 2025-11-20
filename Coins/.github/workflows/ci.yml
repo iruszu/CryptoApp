@@ -31,6 +31,7 @@ jobs:
       - name: Run tests
         run: |
           xcodebuild test \
+            -project Coins.xcodeproj \
             -scheme Coins \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -enableCodeCoverage YES \
