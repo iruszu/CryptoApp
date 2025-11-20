@@ -22,26 +22,7 @@ jobs:
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2' # Try Xcode 16.2, fallback to latest
-        continue-on-error: true
-      
-      - name: List available Xcode versions
-        run: |
-          ls -la /Applications/ | grep -i xcode || echo "No Xcode found in /Applications"
-          xcodebuild -version || echo "xcodebuild failed"
-      
-      - name: Select Xcode (fallback)
-        if: failure()
-        run: |
-          # Try to find any Xcode 16
-          for xcode in /Applications/Xcode*.app; do
-            if [ -d "$xcode" ]; then
-              echo "Found: $xcode"
-              sudo xcode-select -s "$xcode/Contents/Developer"
-              xcodebuild -version
-              break
-            fi
-          done
+          xcode-version: '15.4' # Use Xcode 15.4 (compatible with project format 54)
 
       - name: Show Xcode version
         run: xcodebuild -version
