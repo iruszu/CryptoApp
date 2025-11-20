@@ -2,12 +2,13 @@
 
 name: CI
 
-# Run on pushes to main branch and all pull requests
+# Run on pushes to main branch, pull requests, and manual triggers
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: # Allows manual triggering from GitHub UI
 
 jobs:
   test:
