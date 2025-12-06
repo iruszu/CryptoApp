@@ -13,11 +13,16 @@ on:
 jobs:
   test:
     name: Run Tests
-    runs-on: macos-14 # Uses macOS 14 (Sonoma) with Xcode 15
+    runs-on: macos-15 # Uses macOS 15 with Xcode 26
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0.1'
 
       - name: Show Xcode version
         run: xcodebuild -version
