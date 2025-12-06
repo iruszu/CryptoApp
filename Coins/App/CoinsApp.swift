@@ -12,7 +12,6 @@ struct CoinsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-            // TODO: Add a splash screen here
         }
     }
 }
