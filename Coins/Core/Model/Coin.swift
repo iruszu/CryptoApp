@@ -8,7 +8,6 @@
 import Foundation
 
 /// Represents a cryptocurrency coin with market data.
-/// 
 /// Note: Some fields are optional to handle cases where the API may return nil values.
 /// This defensive approach prevents crashes from unexpected API responses.
 struct Coin: Identifiable, Codable {
