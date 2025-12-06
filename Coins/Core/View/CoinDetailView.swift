@@ -37,8 +37,9 @@ struct CoinDetailView: View {
                 Text(coin.name)
                     .font(.title3)
                     .bold()
+                    .foregroundColor(.primary)
                 Text(coin.symbol.uppercased())
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .font(.subheadline)
             }
             
@@ -52,6 +53,7 @@ struct CoinDetailView: View {
             Text(PriceFormatter.formatPrice(coin.price))
                 .font(.title)
                 .bold()
+                .foregroundColor(.primary)
             
             HStack(spacing: 4) {
                 Image(systemName: coin.safePriceChangePercent24H >= 0 ? "arrow.up.right" : "arrow.down.right")
@@ -65,11 +67,13 @@ struct CoinDetailView: View {
     }
     
     private var statsSection: some View {
-        VStack(spacing: 16) {
-            CardView(title: "24H High", value: PriceFormatter.formatPrice(coin.safeHigh24H))
-            CardView(title: "24H Low", value: PriceFormatter.formatPrice(coin.safeLow24H))
-            CardView(title: "24H Volume", value: PriceFormatter.formatCompact(coin.safeTotalVolume))
-            CardView(title: "Market Cap", value: PriceFormatter.formatCompact(coin.safeMarketCap))
+        GlassEffectContainer(spacing: 16) {
+            VStack(spacing: 16) {
+                CardView(title: "24H High", value: PriceFormatter.formatPrice(coin.safeHigh24H))
+                CardView(title: "24H Low", value: PriceFormatter.formatPrice(coin.safeLow24H))
+                CardView(title: "24H Volume", value: PriceFormatter.formatCompact(coin.safeTotalVolume))
+                CardView(title: "Market Cap", value: PriceFormatter.formatCompact(coin.safeMarketCap))
+            }
         }
     }
 }
