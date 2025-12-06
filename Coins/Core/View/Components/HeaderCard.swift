@@ -14,31 +14,32 @@ struct HeaderCard: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(alignment: .center, spacing: 8) {
                 CoinImageView(imageURL: coin.image, size: 30)
                 
                 HStack(spacing: 4) {
                     Text(coin.name)
                         .font(.title3)
                         .bold()
-                        .foregroundColor(.black)
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                     
                     Text(coin.symbol.uppercased())
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                         .font(.subheadline)
                         .bold()
+                        .lineLimit(1)
                 }
-                .padding(.trailing, 50)
-                
-                Image(systemName: "chevron.right")
-                    .resizable()
-                    .foregroundColor(.secondary)
-                    .frame(width: 6, height: 10)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             
             Text(PriceFormatter.formatPrice(coin.price))
                 .font(.system(size: 30, weight: .semibold))
-                .foregroundColor(.black)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack(spacing: 4) {
                 Image(systemName: coin.safePriceChangePercent24H >= 0 ? "chevron.up" : "chevron.down")
@@ -48,14 +49,13 @@ struct HeaderCard: View {
                 Text(PriceFormatter.formatPercentChange(coin.safePriceChangePercent24H))
                     .font(.subheadline)
                     .foregroundColor(coin.safePriceChangePercent24H >= 0 ? .green : .red)
+                    .lineLimit(1)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .frame(width: 250, height: 120, alignment: .leading)
         .padding(18)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.gray, lineWidth: 0.2)
-        )
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(in: .rect(cornerRadius: 16.0))
     }
 }
 

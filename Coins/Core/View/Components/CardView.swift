@@ -24,16 +24,10 @@ struct CardView: View {
             
             Text(value)
                 .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.primary)
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.gray, lineWidth: 0.2)
-        )
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-        )
+        .glassEffect(in: .rect(cornerRadius: 16.0))
     }
 }
