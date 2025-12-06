@@ -76,7 +76,7 @@ struct CoinDetailView: View {
             }
         }
     }
-}
+ub}
 
 #Preview {
     NavigationStack {
