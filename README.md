@@ -6,6 +6,8 @@ A native iOS cryptocurrency market tracking application built with SwiftUI.
 Displays real-time cryptocurrency prices, market data, and historical
 information from the CoinGecko API.
 
+<img width="1856" height="1542" alt="Frame 1" src="https://github.com/user-attachments/assets/fb071de8-bccb-402c-b95c-ddd6d81fcaa9" />
+
 ## Features
 
 - **Market Overview**: Browse cryptocurrencies sorted by market capitalization
