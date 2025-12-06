@@ -16,6 +16,8 @@ class CoinsViewModel {
     var coins: [Coin] = []
     var loading = false
     var errorMessage: String?
+    var searchResults: [Coin] = []
+    var isSearching = false
     
 
     private let service: CoinServiceProtocol
@@ -83,5 +85,39 @@ class CoinsViewModel {
     /// Clears the current error message.
     func clearError() {
         errorMessage = nil
+    }
+    
+    /// Searches for coins using the search API.
+    /// - Parameter query: Search query string
+    @MainActor
+    func searchCoins(query: String) async {
+        guard !query.isEmpty else {
+            searchResults = []
+            isSearching = false
+            return
+        }
+        
+        isSearching = true
+        errorMessage = nil
+        
+        do {
+            let results = try await service.searchCoins(query: query)
+            self.searchResults = results
+            self.isSearching = false
+        } catch let error as NetworkError {
+            self.errorMessage = error.userMessage
+            self.searchResults = []
+            self.isSearching = false
+        } catch {
+            self.errorMessage = "Failed to search coins"
+            self.searchResults = []
+            self.isSearching = false
+        }
+    }
+    
+    /// Clears search results and resets search state.
+    func clearSearch() {
+        searchResults = []
+        isSearching = false
     }
 }

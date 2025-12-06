@@ -10,8 +10,8 @@ import Foundation
 // Protocol defining the interface for fetching coin data.
 // This abstraction allows for easy testing and swapping implementations.
 protocol CoinServiceProtocol {
-
     func fetchCoins(page: Int, perPage: Int) async throws -> [Coin]
+    func searchCoins(query: String) async throws -> [Coin]
 }
 
 
@@ -71,5 +71,76 @@ class CoinService: CoinServiceProtocol {
         } catch {
             throw NetworkError.decodingError
         }
+    }
+    
+    /// Searches for coins using CoinGecko search API and returns full market data.
+    /// - Parameter query: Search query string
+    /// - Returns: Array of Coin objects with market data
+    func searchCoins(query: String) async throws -> [Coin] {
+        guard !query.isEmpty else {
+            return []
+        }
+        
+        // Step 1: Search for coin IDs
+        let searchURL = "https://api.coingecko.com/api/v3/search"
+        var searchComponents = URLComponents(string: searchURL)
+        searchComponents?.queryItems = [
+            URLQueryItem(name: "query", value: query)
+        ]
+        
+        guard let searchURL = searchComponents?.url else {
+            throw NetworkError.invalidURL
+        }
+        
+        let (searchData, searchResponse) = try await URLSession.shared.data(from: searchURL)
+        
+        guard let httpResponse = searchResponse as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.requestFailed
+        }
+        
+        // Decode search results
+        let searchDecoder = JSONDecoder()
+        let searchResult = try searchDecoder.decode(SearchResponse.self, from: searchData)
+        
+        // Limit to top 50 results to avoid too many API calls
+        let coinIds = searchResult.coins.prefix(50).map { $0.id }
+        
+        guard !coinIds.isEmpty else {
+            return []
+        }
+        
+        // Step 2: Fetch market data for the found coins
+        let marketsURL = "https://api.coingecko.com/api/v3/coins/markets"
+        var marketsComponents = URLComponents(string: marketsURL)
+        marketsComponents?.queryItems = [
+            URLQueryItem(name: "vs_currency", value: defaultCurrency),
+            URLQueryItem(name: "ids", value: coinIds.joined(separator: ",")),
+            URLQueryItem(name: "order", value: "market_cap_desc"),
+            URLQueryItem(name: "per_page", value: "50")
+        ]
+        
+        guard let marketsURL = marketsComponents?.url else {
+            throw NetworkError.invalidURL
+        }
+        
+        let (marketsData, marketsResponse) = try await URLSession.shared.data(from: marketsURL)
+        
+        guard let marketsHttpResponse = marketsResponse as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+        
+        guard (200...299).contains(marketsHttpResponse.statusCode) else {
+            throw NetworkError.requestFailed
+        }
+        
+        // Decode market data
+        let marketsDecoder = JSONDecoder()
+        let coins = try marketsDecoder.decode([Coin].self, from: marketsData)
+        
+        return coins.filter { $0.isValid }
     }
 }
